@@ -1,0 +1,9 @@
+{
+  "name": "frontend",
+  "private": true,
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  }
+}

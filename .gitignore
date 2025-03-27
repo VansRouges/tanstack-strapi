@@ -1,0 +1,19 @@
+# Node.js
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+dist/
+.build/
+.cache/
+.vscode/
+.DS_Store
+
+# Strapi
+backend/.tmp/
+backend/public/uploads/
+
+# Vinxi/Vite build artifacts
+frontend/.vinxi/
+frontend/.vite/
+frontend/dist/
+node_modules

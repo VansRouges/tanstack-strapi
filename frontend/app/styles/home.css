@@ -1,0 +1,90 @@
+.trust-section {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .content-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  
+  .trust-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .image-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .image {
+    background-color: #ddd;
+    background-size: cover;
+    background-position: center;
+    border-radius: 5px;
+  }
+  
+  .large {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .medium {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .trust-list {
+    max-width: 400px;
+    text-align: left;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .checkmark {
+    color: green;
+    font-size: 1.2rem;
+  }
+  
+  .cta-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .cta-button:hover {
+    background-color: #333;
+  }
