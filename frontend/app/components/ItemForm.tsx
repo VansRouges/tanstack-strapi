@@ -21,24 +21,62 @@ export default function ItemForm({ onClose, onItemAdded }) {
       price: 1,
       category: "",
       supplier: "",
+      productImage: null as File | null, // Added image field
     },
     onSubmit: async ({ value }) => {
       try {
-        const payload = { data: value }; // Wrap in "data" object
+        // Step 1: Create the inventory entry
+        const { productImage, ...formData } = value; // Exclude image from first request
+        const payload = { data: formData };
 
-        const response = await fetch("http://localhost:1337/api/inventories", {
+        const entryResponse = await fetch("http://localhost:1337/api/inventories", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
 
-        if (!response.ok) throw new Error("Failed to add item");
+        if (!entryResponse.ok) throw new Error("Failed to create entry");
 
-        const newItem = await response.json();
-        onItemAdded(newItem.data.attributes || newItem.data);
-        alert("Item added successfully!");
+        const entryData = await entryResponse.json();
+        console.log("Entry created:", entryData);
+        const documentId = entryData.data.documentId;
+
+        // Step 2: Upload the image
+        const formDataImage = new FormData();
+        if (productImage) {
+          formDataImage.append("files", productImage); // Append selected file
+        }
+
+        const imageResponse = await fetch("http://localhost:1337/api/upload", {
+          method: "POST",
+          body: formDataImage,
+        });
+
+        if (!imageResponse.ok) throw new Error("Failed to upload image");
+
+        const uploadedImage = await imageResponse.json();
+        console.log("Image uploaded:", uploadedImage);
+        const imageId = uploadedImage[0].id;
+
+        // Step 3: Perform PUT request to update entry with image ID
+        const updatePayload = {
+          data: { productImage: imageId },
+        };
+
+        const updateResponse = await fetch(`http://localhost:1337/api/inventories/${documentId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatePayload),
+        });
+
+        if (!updateResponse.ok) throw new Error("Failed to update entry with image");
+        console.log("Entry updated with image", updateResponse);
+
+        onItemAdded(entryData.data.attributes || entryData.data);
+        alert("Item added successfully with image!");
+        window.location.reload(); // Reload page to show new item
       } catch (error) {
-        console.error("Error creating entry", error);
+        console.error("Error during item creation:", error);
         alert("Error adding item.");
       }
     },
@@ -155,6 +193,29 @@ export default function ItemForm({ onClose, onItemAdded }) {
             <>
               <label htmlFor={field.name}>Supplier</label>
               <input id={field.name} value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
+              <FieldInfo field={field} />
+            </>
+          )}
+        />
+
+        {/* Image Upload */}
+        <form.Field
+          name="productImage"
+          validators={{
+            onChange: ({ value }) => (!value ? "Image is required" : undefined),
+          }}
+          children={(field) => (
+            <>
+              <label htmlFor={field.name}>Product Image</label>
+              <input
+                id={field.name}
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  field.handleChange(() => file);
+                }}
+              />
               <FieldInfo field={field} />
             </>
           )}
